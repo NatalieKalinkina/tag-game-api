@@ -8,30 +8,31 @@ import {
   Param,
   Post,
   Put,
-  Redirect,
   Header,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
+  constructor(private usersService: UsersService) {}
+
   @Get()
-  //   @Redirect('https://google.com', 301)
-  getAll(): string {
-    return 'getAll';
+  getAll() {
+    return this.usersService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id') id: string): string {
-    return 'getOne ' + id;
+  getOne(@Param('id') id: string) {
+    return this.usersService.getById(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Cache-Control', 'none')
-  create(@Body() createUser: CreateUserDto): string {
-    return `Name: ${createUser.name} Email: ${createUser.email}`;
+  create(@Body() createUser: CreateUserDto) {
+    return this.usersService.create(createUser);
   }
 
   @Delete(':id')
