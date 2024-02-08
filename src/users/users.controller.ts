@@ -20,29 +20,32 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
-  getAll() {
+  getAll(): Promise<User[]> {
     return this.usersService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id') id: string) {
+  getOne(@Param('id') id: string): Promise<User> {
     return this.usersService.getById(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Cache-Control', 'none')
-  create(@Body() createUser: CreateUserDto) {
+  create(@Body() createUser: CreateUserDto): Promise<User> {
     return this.usersService.create(createUser);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return 'Remove ' + id;
+  remove(@Param('id') id: string): Promise<User> {
+    return this.usersService.remove(id);
   }
 
   @Put(':id')
-  update(@Body() updateUser: UpdateUserDto, @Param('id') id: string) {
-    return 'Update ' + id;
+  update(
+    @Body() updateUser: UpdateUserDto,
+    @Param('id') id: string,
+  ): Promise<User> {
+    return this.usersService.update(id, updateUser);
   }
 }
